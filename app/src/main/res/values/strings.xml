@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Klok</string>
+
+    <string name="klok_app_widget_description">Klok</string>
+    <string name="klok_app_widget_initial_description">Klok is loading</string>
+
+</resources>
