@@ -17,7 +17,7 @@ class KlokAppWidget : GlanceAppWidget() {
     override fun Content() {
         Text(
             modifier = GlanceModifier.clickable(
-                actionRunCallback(callbackClass = LogTimeActionCallback::class.java)
+                actionRunCallback<LogTimeActionCallback>()
             ),
             text = "Hello from a Glance widget!",
             style = TextStyle(
