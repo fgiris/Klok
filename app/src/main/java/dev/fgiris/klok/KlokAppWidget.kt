@@ -11,11 +11,13 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import kotlinx.coroutines.delay
 
 class KlokAppWidget : GlanceAppWidget() {
     @Composable
     override fun Content() {
         LaunchedEffect(Unit) {
+            delay(1000)
             println("Hello from LaunchEffect")
         }
 
