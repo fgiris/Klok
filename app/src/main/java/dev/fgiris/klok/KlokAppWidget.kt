@@ -11,14 +11,18 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 class KlokAppWidget : GlanceAppWidget() {
     @Composable
     override fun Content() {
         LaunchedEffect(Unit) {
-            delay(1000)
-            println("Hello from LaunchEffect")
+            withContext(NonCancellable) {
+                delay(1000L)
+                println("I've just delayed for 1 sec because I'm non-cancellable")
+            }
         }
 
         Text(
