@@ -1,6 +1,7 @@
 package dev.fgiris.klok
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.graphics.Color
 import androidx.glance.GlanceModifier
 import androidx.glance.action.actionStartActivity
@@ -14,6 +15,10 @@ import androidx.glance.unit.ColorProvider
 class KlokAppWidget : GlanceAppWidget() {
     @Composable
     override fun Content() {
+        LaunchedEffect(Unit) {
+            println("Hello from LaunchEffect")
+        }
+
         Text(
             modifier = GlanceModifier.clickable(
                 actionStartActivity<GlanceActionCallbackActivity>()
