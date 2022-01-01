@@ -3,6 +3,8 @@ package dev.fgiris.klok
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
@@ -14,11 +16,15 @@ import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
 import dev.fgiris.klok.service.TextUpdateService
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class KlokAppWidget : GlanceAppWidget() {
     companion object {
-        val KLOK_SHARED_PREF = "KLOK_SHARED_PREF"
-        val KLOK_TEXT_KEY = "KLOK_TEXT_KEY"
+        val KLOK_FILE_KEY = "KLOK_FILE_KEY"
+        val KLOK_TEXT_KEY = stringPreferencesKey("KLOK_TEXT_KEY")
+
+        private val Context.klokDataStore by preferencesDataStore(KLOK_FILE_KEY)
 
         suspend fun updateWidget(context: Context) = KlokAppWidget().updateAll(context)
     }
@@ -37,8 +43,10 @@ class KlokAppWidget : GlanceAppWidget() {
     }
 
     private fun getText(context: Context): String {
-        val sharedPref = context.getSharedPreferences(KLOK_SHARED_PREF, Context.MODE_PRIVATE)
-        return sharedPref.getString(KLOK_TEXT_KEY, "No text was set") ?: "No text was set"
+        return runBlocking {
+            val preferences = context.klokDataStore.data.first()
+            preferences[KLOK_TEXT_KEY] ?: "No text was set"
+        }
     }
 }
 

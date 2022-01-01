@@ -1,11 +1,11 @@
 package dev.fgiris.klok.service
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
-import android.os.Handler
 import android.os.IBinder
 import android.widget.Toast
+import androidx.glance.state.GlanceState
+import androidx.glance.state.PreferencesGlanceStateDefinition
 import dev.fgiris.klok.KlokAppWidget
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -31,12 +31,22 @@ class TextUpdateService : Service() {
     }
 
     private suspend fun setTextAndUpdateWidget() {
-        val sharedPref = getSharedPreferences(KlokAppWidget.KLOK_SHARED_PREF, Context.MODE_PRIVATE)
-        sharedPref
-            .edit()
-            .putString(KlokAppWidget.KLOK_TEXT_KEY, "The text has been set from the service")
-            .apply()
+        // Update the data store
+        GlanceState.updateValue(
+            this,
+            PreferencesGlanceStateDefinition,
+            KlokAppWidget.KLOK_FILE_KEY
+        ) { preferences ->
+            val mutablePreferences = preferences
+                .toMutablePreferences()
 
+            mutablePreferences[KlokAppWidget.KLOK_TEXT_KEY] =
+                "The text has been set from the service"
+
+            mutablePreferences.toPreferences()
+        }
+
+        // Update the widget
         KlokAppWidget.updateWidget(this@TextUpdateService)
     }
 }
