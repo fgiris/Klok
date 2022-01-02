@@ -3,6 +3,7 @@ package dev.fgiris.klok
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -31,16 +32,44 @@ class KlokAppWidget : GlanceAppWidget() {
         val KLOK_FILE_KEY = "KLOK_FILE_KEY"
         val KLOK_TEXT_KEY = stringPreferencesKey("KLOK_TEXT_KEY")
 
+        // Responsive sizes
+        val SMALL_BOX = DpSize(100.dp, 100.dp)
+        val LARGE_BOX = DpSize(200.dp, 200.dp)
+
         private val Context.klokDataStore by preferencesDataStore(KLOK_FILE_KEY)
 
         suspend fun updateWidget(context: Context) = KlokAppWidget().updateAll(context)
     }
 
     override val sizeMode: SizeMode
-        get() = SizeMode.Exact
+        get() = SizeMode.Responsive(
+            setOf(SMALL_BOX, LARGE_BOX)
+        )
 
     @Composable
     override fun Content() {
+        when (LocalSize.current) {
+            SMALL_BOX -> SmallBox()
+            LARGE_BOX -> LargeBox()
+            else -> throw IllegalArgumentException("Invalid size")
+        }
+    }
+
+    @Composable
+    private fun SmallBox() {
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "🙈")
+        }
+    }
+
+    @Composable
+    private fun LargeBox() {
         Box(
             modifier = GlanceModifier
                 .fillMaxSize()
@@ -48,17 +77,13 @@ class KlokAppWidget : GlanceAppWidget() {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
-            val text = if (LocalSize.current.width > 150.dp) {
-                "Width is greater than 150 dp"
-            } else "Width is smaller than 150 dp"
-
             Text(
                 modifier = GlanceModifier.clickable(
                     actionStartService<TextUpdateService>()
                 ),
-                text = "SizeMode.Exact\n\n" +
-                        "Content function is called for each size \n\n" +
-                        "$text\n\n${LocalSize.current}",
+                text = "SizeMode.Responsive\n\n" +
+                        "🙊\n\n" +
+                        "${LocalSize.current}",
                 style = TextStyle(
                     color = ColorProvider(Color.White)
                 )
