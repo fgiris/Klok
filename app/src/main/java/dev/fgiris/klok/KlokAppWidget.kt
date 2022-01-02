@@ -48,11 +48,17 @@ class KlokAppWidget : GlanceAppWidget() {
                 .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
+            val text = if (LocalSize.current.width > 150.dp) {
+                "Width is greater than 150 dp"
+            } else "Width is smaller than 150 dp"
+
             Text(
                 modifier = GlanceModifier.clickable(
                     actionStartService<TextUpdateService>()
                 ),
-                text = "I am a using SizeMode.Single\n\nContent function will be called only once\n\n\n${LocalSize.current}",
+                text = "SizeMode.Single\n\n" +
+                        "Content function is only called once\n\n" +
+                        "$text\n\n${LocalSize.current}",
                 style = TextStyle(
                     color = ColorProvider(Color.White)
                 )
