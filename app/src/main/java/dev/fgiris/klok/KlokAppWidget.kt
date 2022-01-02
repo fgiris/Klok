@@ -3,15 +3,22 @@ package dev.fgiris.klok
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.glance.GlanceModifier
-import androidx.glance.LocalContext
+import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartService
 import androidx.glance.appwidget.updateAll
+import androidx.glance.background
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.padding
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -29,17 +36,28 @@ class KlokAppWidget : GlanceAppWidget() {
         suspend fun updateWidget(context: Context) = KlokAppWidget().updateAll(context)
     }
 
+    override val sizeMode: SizeMode
+        get() = SizeMode.Single
+
     @Composable
     override fun Content() {
-        Text(
-            modifier = GlanceModifier.clickable(
-                actionStartService<TextUpdateService>()
-            ),
-            text = getText(LocalContext.current),
-            style = TextStyle(
-                color = ColorProvider(Color.Blue)
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(Color.Red)
+                .padding(16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                modifier = GlanceModifier.clickable(
+                    actionStartService<TextUpdateService>()
+                ),
+                text = "I am a using SizeMode.Single\n\nContent function will be called only once\n\n\n${LocalSize.current}",
+                style = TextStyle(
+                    color = ColorProvider(Color.White)
+                )
             )
-        )
+        }
     }
 
     private fun getText(context: Context): String {
