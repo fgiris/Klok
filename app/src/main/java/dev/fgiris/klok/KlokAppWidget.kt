@@ -37,7 +37,7 @@ class KlokAppWidget : GlanceAppWidget() {
     }
 
     override val sizeMode: SizeMode
-        get() = SizeMode.Single
+        get() = SizeMode.Exact
 
     @Composable
     override fun Content() {
@@ -56,8 +56,8 @@ class KlokAppWidget : GlanceAppWidget() {
                 modifier = GlanceModifier.clickable(
                     actionStartService<TextUpdateService>()
                 ),
-                text = "SizeMode.Single\n\n" +
-                        "Content function is only called once\n\n" +
+                text = "SizeMode.Exact\n\n" +
+                        "Content function is called for each size \n\n" +
                         "$text\n\n${LocalSize.current}",
                 style = TextStyle(
                     color = ColorProvider(Color.White)
